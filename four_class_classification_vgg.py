@@ -70,17 +70,26 @@ def run_test_harness():
                                                  class_mode='categorical', batch_size=64, target_size=(200, 200))
     test_it = test_datagen.flow_from_directory('dataset_all/test/',
                                                class_mode='categorical', batch_size=64, target_size=(200, 200))
+
+    filepath = 'best_model.hdf5'
+    checkpoint = ModelCheckpoint(filepath=filepath,
+                                 monitor='val_loss',
+                                 verbose=1,
+                                 save_best_only=True,
+                                 mode='min')
+    callbacks = [checkpoint, tqdm_callback]
+
     # fit model
     history = model.fit(train_it, steps_per_epoch=len(train_it),
                         validation_data=test_it, validation_steps=len(test_it), epochs=200, verbose=0,
-                        callbacks=[tqdm_callback])
+                        callbacks=callbacks)
+
     # evaluate model
     _, acc = model.evaluate(test_it, steps=len(test_it), verbose=0, callbacks=[tqdm_callback])
     print('> %.3f' % (acc * 100.0))
     model.save('./colon_model_4_b_4_class')
     # learning curves
     summarize_diagnostics(history)
-
 
 
 if __name__ == '__main__':
