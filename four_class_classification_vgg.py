@@ -11,6 +11,8 @@ from keras.preprocessing.image import ImageDataGenerator
 from keras.layers import Dropout
 import tensorflow as tf
 import tensorflow_addons as tfa
+from keras.callbacks import ModelCheckpoint
+
 
 tqdm_callback = tfa.callbacks.TQDMProgressBar()
 
